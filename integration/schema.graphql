@@ -1,0 +1,11 @@
+type Author implements HasName {
+  name: String!
+}
+
+type Book implements HasName {
+  name: String!
+}
+
+interface HasName {
+  name: String!
+}
