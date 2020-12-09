@@ -1,3 +1,5 @@
+import { Author, Book } from "./entities";
+
 export const possibleTypes = {
   HasName: ["Author", "Book"],
 };

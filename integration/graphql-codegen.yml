@@ -3,5 +3,9 @@ schema: "./integration/schema.graphql"
 documents: null
 generates:
   integration/graphql-types.ts:
+    config:
+      possibleTypes:
+        generateUnionTypes: true
+        entityImportPattern: "./entities#[ENTITY]"
     plugins:
       - ./build/index.js
