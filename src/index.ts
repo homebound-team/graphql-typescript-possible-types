@@ -24,6 +24,18 @@ export const plugin: PluginFunction<{}> = async schema => {
         return `${name}: [${impls.map(n => `"${n}"`).join(", ")}],`;
       })}
     };
+    
+    ${addUnionTypes(interfaceImpls)}
   `.toStringWithImports();
+
+  // Also add type unions of the possible types for use in code if desired
+
+
   return { content } as PluginOutput;
 };
+
+function addUnionTypes(interfaceImpls: Record<string, string[]>) {
+  return Object.entries(interfaceImpls).map(([name, impls]) => `
+  export type ${name}Types = ${impls.join(" | ")};
+  `).join("");
+}
