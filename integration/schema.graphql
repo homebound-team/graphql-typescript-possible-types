@@ -1,21 +1,15 @@
-type Author implements HasName {
-  name: String!
-}
-
-type Book implements HasName & DoNotGenUnion {
-  name: String!
-  someField: String!
-}
-
 interface HasName {
   name: String!
 }
 
-type IgnoreMeInUnions implements HasName & DoNotGenUnion {
+type Author implements HasName {
   name: String!
-  someField: String!
 }
 
-interface DoNotGenUnion {
-  someField: String!
+type Book implements HasName {
+  name: String!
+}
+
+type NoImportNeeded implements HasName {
+  name: String!
 }
