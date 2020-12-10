@@ -5,7 +5,9 @@ generates:
   integration/graphql-types.ts:
     config:
       possibleTypes:
-        generateUnionTypes: true
-        entityImportPattern: "./entities#[ENTITY]"
+        unionTypes:
+          generate: true
+          entityImportPattern: "./entities#[ENTITY]"
+          ignore: ["DoNotGenUnion", "IgnoreMeInUnions"]
     plugins:
       - ./build/index.js
