@@ -9,7 +9,7 @@ export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFil
 
   // Create a map of interface -> implementing types
   const interfaceImpls: Record<string, string[]> = {};
-  Object.values(schema.getTypeMap()).forEach((type) => {
+  Object.values(schema.getTypeMap()).forEach(type => {
     if (type instanceof GraphQLObjectType) {
       for (const i of type.getInterfaces()) {
         if (interfaceImpls[i.name] === undefined) {
@@ -24,7 +24,7 @@ export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFil
   chunks.push(code`
     export const possibleTypes = {
       ${Object.entries(interfaceImpls).map(([name, impls]) => {
-        return `${name}: [${impls.map((n) => `"${n}"`).join(", ")}],`;
+        return `${name}: [${impls.map(n => `"${n}"`).join(", ")}],`;
       })}
     };
   `);
@@ -39,18 +39,18 @@ export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFil
 
 // Also add type unions of the possible types for use in code if desired
 function addUnionTypes(interfaceImpls: Record<string, string[]>, config: UnionTypesConfig): Code[] {
-  return Object.entries(interfaceImpls)
-    .filter(([name]) => !config.ignore.includes(name))
-    .map(
-      ([name, impls]) => code`
+  return Object.entries(interfaceImpls).map(
+    ([name, impls]) => code`
   export type ${name}Types = ${joinCodes(
-        impls
-          .filter((entityName) => !config.ignore.includes(entityName))
-          .map((entityName) => toImp(config.entityImportPattern.replace(entityNamePlaceholder, entityName))),
-        " | ",
-      )};
+      impls.map(entityName =>
+        config.nonEntityTypes.includes(entityName)
+          ? entityName
+          : toImp(config.entityImportPattern.replace(entityNamePlaceholder, entityName)),
+      ),
+      " | ",
+    )};
   `,
-    );
+  );
 }
 
 interface Config {
@@ -61,17 +61,22 @@ interface PossibleTypesConfig {
   unionTypes?: UnionTypesConfig;
 }
 
+/**
+ * generate: Indicates whether or not the union types should be generated (default `false`)
+ * entityImportPattern: Used to generate import statements for entities (default `src/entities#[ENTITY]`)
+ * nonEntityTypes: Specify types which are not entities, and thus don't need an import statement (default `[]`)
+ */
 interface UnionTypesConfig {
-  entityImportPattern: string;
   generate: boolean;
-  ignore: string[];
+  entityImportPattern: string;
+  nonEntityTypes: string[];
 }
 
 const entityNamePlaceholder = "[ENTITY]";
 const defaultUnionTypesConfig: UnionTypesConfig = {
   generate: false,
   entityImportPattern: `src/entities#${entityNamePlaceholder}`,
-  ignore: [],
+  nonEntityTypes: [],
 };
 
 /** A `.join(...)` that doesn't `toString()` elements so that they can stay codes. */

@@ -8,6 +8,6 @@ generates:
         unionTypes:
           generate: true
           entityImportPattern: "./entities#[ENTITY]"
-          ignore: ["DoNotGenUnion", "IgnoreMeInUnions"]
+          nonEntityTypes: ["NoImportNeeded"]
     plugins:
       - ./build/index.js
