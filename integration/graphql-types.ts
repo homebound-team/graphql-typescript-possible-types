@@ -1,7 +1,3 @@
-import { Author, Book } from "./entities";
-
 export const possibleTypes = {
-  HasName: ["Author", "Book", "NoImportNeeded"],
+  HasName: ["Author", "Book"],
 };
-
-export type HasNameTypes = Author | Book | NoImportNeeded;

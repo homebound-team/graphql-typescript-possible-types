@@ -4,9 +4,7 @@ This is a [graphql-code-generator](https://graphql-code-generator.com/) plugin t
 
 ## Overview
 
-This plugin generates two things:
-1. An object defining possible types which implement interfaces, [needed by Apollo](https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually)
-2. For each interface type, it generates a union type of the possible types for convenience in your code
+This plugin generates a [`possibleTypes` object](integration/graphql-types.ts) defining possible types which implement interfaces, [needed by Apollo](https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually)
 
 ## Contributing
 
