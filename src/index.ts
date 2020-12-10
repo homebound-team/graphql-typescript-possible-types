@@ -5,11 +5,11 @@ import PluginOutput = Types.PluginOutput;
 
 /** Generates a `possibleTypes` config object for apollo. */
 export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFile) => {
-  const config = { ...defaultConfig, ...configFromFile.possibleTypes };
+  const unionTypesConfig = { ...defaultUnionTypesConfig, ...configFromFile.possibleTypes?.unionTypes };
 
   // Create a map of interface -> implementing types
   const interfaceImpls: Record<string, string[]> = {};
-  Object.values(schema.getTypeMap()).forEach(type => {
+  Object.values(schema.getTypeMap()).forEach((type) => {
     if (type instanceof GraphQLObjectType) {
       for (const i of type.getInterfaces()) {
         if (interfaceImpls[i.name] === undefined) {
@@ -24,13 +24,13 @@ export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFil
   chunks.push(code`
     export const possibleTypes = {
       ${Object.entries(interfaceImpls).map(([name, impls]) => {
-        return `${name}: [${impls.map(n => `"${n}"`).join(", ")}],`;
+        return `${name}: [${impls.map((n) => `"${n}"`).join(", ")}],`;
       })}
     };
   `);
 
-  if (config.generateUnionTypes) {
-    chunks.push(...addUnionTypes(interfaceImpls, config));
+  if (unionTypesConfig.generate) {
+    chunks.push(...addUnionTypes(interfaceImpls, unionTypesConfig));
   }
 
   const content = await code`${chunks}`.toStringWithImports();
@@ -38,15 +38,19 @@ export const plugin: PluginFunction<Config> = async (schema, _doc, configFromFil
 };
 
 // Also add type unions of the possible types for use in code if desired
-function addUnionTypes(interfaceImpls: Record<string, string[]>, config: PossibleTypesConfig): Code[] {
-  return Object.entries(interfaceImpls).map(
-    ([name, impls]) => code`
+function addUnionTypes(interfaceImpls: Record<string, string[]>, config: UnionTypesConfig): Code[] {
+  return Object.entries(interfaceImpls)
+    .filter(([name]) => !config.ignore.includes(name))
+    .map(
+      ([name, impls]) => code`
   export type ${name}Types = ${joinCodes(
-      impls.map(entityName => toImp(config.entityImportPattern.replace(entityNamePlaceholder, entityName))),
-      " | ",
-    )};
+        impls
+          .filter((entityName) => !config.ignore.includes(entityName))
+          .map((entityName) => toImp(config.entityImportPattern.replace(entityNamePlaceholder, entityName))),
+        " | ",
+      )};
   `,
-  );
+    );
 }
 
 interface Config {
@@ -54,14 +58,20 @@ interface Config {
 }
 
 interface PossibleTypesConfig {
-  generateUnionTypes: boolean;
+  unionTypes?: UnionTypesConfig;
+}
+
+interface UnionTypesConfig {
   entityImportPattern: string;
+  generate: boolean;
+  ignore: string[];
 }
 
 const entityNamePlaceholder = "[ENTITY]";
-const defaultConfig: PossibleTypesConfig = {
-  generateUnionTypes: false,
+const defaultUnionTypesConfig: UnionTypesConfig = {
+  generate: false,
   entityImportPattern: `src/entities#${entityNamePlaceholder}`,
+  ignore: [],
 };
 
 /** A `.join(...)` that doesn't `toString()` elements so that they can stay codes. */
