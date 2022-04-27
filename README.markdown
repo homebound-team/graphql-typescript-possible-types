@@ -6,6 +6,19 @@ This is a [graphql-code-generator](https://graphql-code-generator.com/) plugin t
 
 This plugin generates a [`possibleTypes` object](integration/graphql-types.ts) defining possible types which implement interfaces, [needed by Apollo](https://www.apollographql.com/docs/react/data/fragments/#defining-possibletypes-manually)
 
+## Example
+```sh
+npm i @homebound/graphql-typescript-possible-types
+```
+
+**codegen.yml**
+```yml
+generates:
+  integration/graphql-types.ts:
+    plugins:
+      - node_modules/@homebound/graphql-typescript-possible-types
+```
+
 ## Contributing
 
 In order to develop changes for this package, follow these steps:
