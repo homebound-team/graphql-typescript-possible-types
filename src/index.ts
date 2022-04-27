@@ -23,7 +23,7 @@ export const plugin: PluginFunction<{}> = async schema => {
       ${Object.entries(interfaceImpls).map(([name, impls]) => {
         return `${name}: [${impls.map(n => `"${n}"`).join(", ")}],`;
       })}
-    } as const;
+    };
   `.toStringWithImports();
   return { content } as PluginOutput;
 };
