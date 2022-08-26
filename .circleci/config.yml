@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@1.1.4
+  node: circleci/node@5.0.0
 
 workflows:
   version: 2
@@ -28,7 +28,7 @@ jobs:
         type: boolean
         default: false
     docker:
-      - image: circleci/node:12.7
+      - image: cimg/node:16.4.0
     working_directory: ~/project
     steps:
       - checkout
