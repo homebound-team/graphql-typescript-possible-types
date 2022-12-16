@@ -9,3 +9,5 @@ type Book implements HasName {
 interface HasName {
   name: String!
 }
+
+union Feed = Author | Book
