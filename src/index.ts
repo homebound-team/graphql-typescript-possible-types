@@ -1,5 +1,5 @@
 import { PluginFunction, Types } from "@graphql-codegen/plugin-helpers";
-import { GraphQLObjectType } from "graphql";
+import { GraphQLObjectType, GraphQLUnionType } from "graphql";
 import { code } from "ts-poet";
 import PluginOutput = Types.PluginOutput;
 
@@ -16,6 +16,12 @@ export const plugin: PluginFunction<{}> = async (schema) => {
         interfaceImpls[i.name].push(type.name);
       }
     }
+    if (type instanceof GraphQLUnionType) {
+      interfaceImpls[type.name] = [];
+      for (const i of type.getTypes()) {
+        interfaceImpls[type.name].push(i.name);
+      }
+    }
   });
 
   const content = await code`
@@ -23,7 +29,7 @@ export const plugin: PluginFunction<{}> = async (schema) => {
       ${Object.entries(interfaceImpls).map(([name, impls]) => {
         return `${name}: [${impls.map((n) => `"${n}"`).join(", ")}],`;
       })}
-    } as const;
+    };
   `.toStringWithImports();
   return { content } as PluginOutput;
 };
