@@ -8,6 +8,8 @@ export const plugin: PluginFunction<{}> = async (schema) => {
   // Create a map of interface -> implementing types
   const interfaceImpls: Record<string, string[]> = {};
   Object.values(schema.getTypeMap()).forEach((type) => {
+    // GraphQLInterfaceType does not tell us the implementing subtypes, so we
+    // have to scan all subtypes, and then add their entry to the interface's type.
     if (type instanceof GraphQLObjectType) {
       for (const i of type.getInterfaces()) {
         if (interfaceImpls[i.name] === undefined) {
@@ -16,11 +18,10 @@ export const plugin: PluginFunction<{}> = async (schema) => {
         interfaceImpls[i.name].push(type.name);
       }
     }
+    // GraphQLUnionTypes do tell us the substypes, so we can just create the
+    // entry with a single map.
     if (type instanceof GraphQLUnionType) {
-      interfaceImpls[type.name] = [];
-      for (const i of type.getTypes()) {
-        interfaceImpls[type.name].push(i.name);
-      }
+      interfaceImpls[type.name] = type.getTypes().map((t) => t.name);
     }
   });
 
