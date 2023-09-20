@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@1.1.4
+  node: circleci/node@5.1.0
 
 workflows:
   version: 2
@@ -28,7 +28,7 @@ jobs:
         type: boolean
         default: false
     docker:
-      - image: cimg/node:16.4.0
+      - image: cimg/node:18.18.0
     working_directory: ~/project
     steps:
       - checkout
@@ -36,9 +36,9 @@ jobs:
       - node/with-cache:
           steps:
             - run: npm install
-      - run: npm run build
+      - run: yarn build
       - when:
           condition: <<parameters.publish>>
           steps:
             - run: ./bump.sh package.json
-            - run: npm publish
+            - run: yarn npm publish
