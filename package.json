@@ -5,7 +5,7 @@
   "types": "./build/",
   "scripts": {
     "build": "rm -rf build; tsc",
-    "prepare": "yarn build",
+    "prepack": "yarn build",
     "test": "jest --watch",
     "coverage": "jest --collectCoverage",
     "format": "prettier --write 'src/**/*.{ts,js,tsx,jsx}'",
