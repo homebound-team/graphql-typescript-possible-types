@@ -31,6 +31,6 @@ export const plugin: PluginFunction<{}> = async (schema) => {
         return `${name}: [${impls.map((n) => `"${n}"`).join(", ")}],`;
       })}
     };
-  `.toStringWithImports();
+  `.toString();
   return { content } as PluginOutput;
 };

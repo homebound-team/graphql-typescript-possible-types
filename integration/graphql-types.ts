@@ -1,4 +1,1 @@
-export const possibleTypes = {
-  HasName: ["Author", "Book"],
-  Feed: ["Author", "Book"],
-};
+export const possibleTypes = { HasName: ["Author", "Book"], Feed: ["Author", "Book"] };
