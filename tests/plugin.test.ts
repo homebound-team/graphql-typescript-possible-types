@@ -174,27 +174,28 @@ describe("possibleTypes plugin", () => {
         id: ID!
       }
 
-      interface Entity {
-        createdAt: String!
+      interface Resource implements Node {
+        id: ID!
+        url: String!
       }
 
-      type User implements Node & Entity {
+      type Image implements Resource & Node {
         id: ID!
-        createdAt: String!
-        name: String!
+        url: String!
+        width: Int!
       }
 
-      type Post implements Node & Entity {
+      type Video implements Resource & Node {
         id: ID!
-        createdAt: String!
-        title: String!
+        url: String!
+        duration: Int!
       }
     `);
 
     const result = await runPlugin(schema);
 
     expect(result).toMatchInlineSnapshot(`
-     "export const possibleTypes = { Node: ["User", "Post"], Entity: ["User", "Post"] };
+     "export const possibleTypes = { Resource: ["Image", "Video"], Node: ["Image", "Video"] };
      "
     `);
   });
