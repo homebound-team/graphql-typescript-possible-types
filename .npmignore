@@ -2,6 +2,7 @@
 /src
 /.idea
 /.circleci
+/.husky
 /.yarn
 /integration
 /.nvmrc
@@ -10,4 +11,7 @@
 /bump.sh
 /yarn.lock
 /package.json.bak
+/tsconfig.build.json
 /tsconfig.json
+/jest.config.js
+/tests

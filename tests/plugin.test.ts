@@ -18,8 +18,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain("export const possibleTypes");
-    expect(result).toContain('HasName: ["Author", "Book"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { HasName: ["Author", "Book"] };
+     "
+    `);
   });
 
   it("generates possibleTypes for union types", async () => {
@@ -37,8 +39,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain("export const possibleTypes");
-    expect(result).toContain('Feed: ["Author", "Book"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { Feed: ["Author", "Book"] };
+     "
+    `);
   });
 
   it("generates possibleTypes for both interfaces and unions", async () => {
@@ -60,9 +64,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toMatchSnapshot();
-    expect(result).toContain('HasName: ["Author", "Book"]');
-    expect(result).toContain('Feed: ["Author", "Book"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { HasName: ["Author", "Book"], Feed: ["Author", "Book"] };
+     "
+    `);
   });
 
   it("handles multiple interface implementations", async () => {
@@ -87,8 +92,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain('Node: ["User", "Product"]');
-    expect(result).toContain('Named: ["User"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { Node: ["User", "Product"], Named: ["User"] };
+     "
+    `);
   });
 
   it("handles schema with no interfaces or unions", async () => {
@@ -104,7 +111,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain("export const possibleTypes = {}");
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = {};
+     "
+    `);
   });
 
   it("handles empty schema", async () => {
@@ -116,7 +126,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain("export const possibleTypes = {}");
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = {};
+     "
+    `);
   });
 
   it("handles union with single type", async () => {
@@ -130,7 +143,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain('SingleUnion: ["Author"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { SingleUnion: ["Author"] };
+     "
+    `);
   });
 
   it("handles complex union with many types", async () => {
@@ -146,7 +162,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain('ManyTypes: ["TypeA", "TypeB", "TypeC", "TypeD", "TypeE"]');
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { ManyTypes: ["TypeA", "TypeB", "TypeC", "TypeD", "TypeE"] };
+     "
+    `);
   });
 
   it("sorts types alphabetically in the output", async () => {
@@ -170,12 +189,10 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    // GraphQL returns types in the order they appear in the type map
-    // which may be alphabetical depending on the implementation
-    expect(result).toContain("Animal");
-    expect(result).toContain("Cat");
-    expect(result).toContain("Dog");
-    expect(result).toContain("Zebra");
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { Animal: ["Zebra", "Cat", "Dog"] };
+     "
+    `);
   });
 
   it("handles interface extending another interface", async () => {
@@ -203,32 +220,9 @@ describe("possibleTypes plugin", () => {
 
     const result = await runPlugin(schema);
 
-    expect(result).toContain('Node: ["User", "Post"]');
-    expect(result).toContain('Entity: ["User", "Post"]');
-  });
-
-  it("matches the current integration test output", async () => {
-    // This test uses the exact schema from integration/schema.graphql
-    const schema = createTestSchema(`
-      type Author implements HasName {
-        name: String!
-      }
-
-      type Book implements HasName {
-        name: String!
-      }
-
-      interface HasName {
-        name: String!
-      }
-
-      union Feed = Author | Book
+    expect(result).toMatchInlineSnapshot(`
+     "export const possibleTypes = { Node: ["User", "Post"], Entity: ["User", "Post"] };
+     "
     `);
-
-    const result = await runPlugin(schema);
-
-    // Should match the current output in integration/graphql-types.ts
-    expect(result).toContain('HasName: ["Author", "Book"]');
-    expect(result).toContain('Feed: ["Author", "Book"]');
   });
 });
