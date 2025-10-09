@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.1.0
+  node: circleci/node@7
 
 workflows:
   version: 2
@@ -29,7 +29,6 @@ commands:
       - node/install-packages:
           pkg-manager: yarn-berry
           with-cache: true
-          include-branch-in-cache-key: false
 
 jobs:
   build:
@@ -38,10 +37,11 @@ jobs:
         type: boolean
         default: false
     docker:
-      - image: cimg/node:20.9.0
+      - image: cimg/node:22.19.0
     working_directory: ~/project
     steps:
       - bootstrap
+      - run: yarn test
       - run: yarn build
       - when:
           condition: <<parameters.publish>>

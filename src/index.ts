@@ -25,7 +25,7 @@ export const plugin: PluginFunction<{}> = async (schema) => {
     }
   });
 
-  const content = await code`
+  const content = code`
     export const possibleTypes = {
       ${Object.entries(interfaceImpls).map(([name, impls]) => {
         return `${name}: [${impls.map((n) => `"${n}"`).join(", ")}],`;
