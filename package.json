@@ -4,31 +4,34 @@
   "main": "./build/index.js",
   "types": "./build/",
   "scripts": {
-    "build": "rm -rf build; tsc",
-    "prepack": "yarn build",
-    "test": "jest --watch",
+    "build": "rm -rf build; tsc --project tsconfig.build.json",
+    "test": "jest",
     "coverage": "jest --collectCoverage",
     "format": "prettier --write 'src/**/*.{ts,js,tsx,jsx}'",
-    "graphql-codegen": "rm integration/graphql-types.ts; graphql-codegen --config integration/graphql-codegen.yml"
+    "postinstall": "husky",
+    "prepack": "pinst --disable && yarn build",
+    "postpack": "pinst --enable"
   },
   "dependencies": {
-    "@graphql-codegen/plugin-helpers": "^5.0.1",
+    "@graphql-codegen/plugin-helpers": "^6.0.0",
     "change-case": "^4.1.2",
-    "ts-poet": "^6.6.0"
+    "ts-poet": "^6.12.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
-    "graphql": "^16.8.1",
-    "husky": "^3.0.9",
-    "jest": "^29.7.0",
-    "prettier": "^3.0.3",
-    "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "@graphql-codegen/cli": "^6.0.0",
+    "@types/jest": "^30.0.0",
+    "graphql": "^16.11.0",
+    "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "lint-staged": "^16.2.3",
+    "memfs": "^4.49.0",
+    "pinst": "^3.0.0",
+    "prettier": "^3.6.2",
+    "ts-jest": "^29.4.4",
+    "typescript": "^5.9.3"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn format"
-    }
-  },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@4.10.3",
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx,graphql}": "prettier --write"
+  }
 }

@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`possibleTypes plugin generates possibleTypes for both interfaces and unions 1`] = `
+"export const possibleTypes = { HasName: ["Author", "Book"], Feed: ["Author", "Book"] };
+"
+`;
