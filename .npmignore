@@ -6,7 +6,7 @@
 /.yarn
 /integration
 /.nvmrc
-/.pretterrc.js
+/.prettierrc.js
 /.yarnrc.yml
 /bump.sh
 /yarn.lock
