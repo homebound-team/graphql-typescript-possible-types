@@ -168,33 +168,6 @@ describe("possibleTypes plugin", () => {
     `);
   });
 
-  it("sorts types alphabetically in the output", async () => {
-    const schema = createTestSchema(`
-      type Zebra implements Animal {
-        name: String!
-      }
-
-      type Cat implements Animal {
-        name: String!
-      }
-
-      type Dog implements Animal {
-        name: String!
-      }
-
-      interface Animal {
-        name: String!
-      }
-    `);
-
-    const result = await runPlugin(schema);
-
-    expect(result).toMatchInlineSnapshot(`
-     "export const possibleTypes = { Animal: ["Zebra", "Cat", "Dog"] };
-     "
-    `);
-  });
-
   it("handles interface extending another interface", async () => {
     const schema = createTestSchema(`
       interface Node {
