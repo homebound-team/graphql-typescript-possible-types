@@ -14,7 +14,6 @@ workflows:
               ignore:
                 - main
       - build:
-          # Empty context: gives the job a CircleCI OIDC token for npm trusted publishing.
           context: npm-trusted-publish
           publish: true
           filters:
